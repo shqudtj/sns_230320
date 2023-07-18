@@ -32,5 +32,11 @@ public class UserBO {
 					);
 		return userEntity == null ? null : userEntity.getId(); // pk만 리턴
 	}
+	
+	// input: loginId, password
+	// output: UserEntity
+	public UserEntity getUserEntityByLoginIdAndPassword(String loginId, String password) {
+		return userRepository.findByLoginIdAndPassword(loginId, password);
+	}
 
 }

@@ -22,8 +22,8 @@
 			<div>이름</div>
 			<input type="text" id="name" name="name" placeholder="이름을 입력해주세요" class="form-control">
 			<div>이메일</div>
-			<input type="text" placeholder="이름을 입력해주세요" class="form-control">
-			<button type="submit" id="email" name="email" class="btn btn-primary text-white mt-2">가입하기</button>
+			<input type="text" id="email" name="email"  placeholder="이름을 입력해주세요" class="form-control">
+			<button type="submit" class="btn btn-primary text-white mt-2">가입하기</button>
 		</div>
 	</form>
 </div>
@@ -44,7 +44,6 @@
 				$('#idCheckLength').removeClass('d-none');
 				return;
 			}
-			console.log(loginId);
 			
 			// AJAX 통신 - 중복확인
 			$.ajax({
@@ -78,19 +77,23 @@
 			// validation			
 			let loginId = $('input[name=loginId]').val().trim();
 			let password = $('#password').val();
-			let confirmPassword = $('#confirmPassword').val();
+			let passwordConfirm = $('#passwordConfirm').val();
 			let name = $('#name').val().trim();
 			let email = $('#email').val().trim();
+			console.log(password);
+			console.log(passwordConfirm);
+			console.log(email);
+			
 			
 			if (!loginId) {
 				alert("아이디를 입력하세요");
 				return false;	// submit일때는 그냥 return이 아니라 return false
 			}
-			if (!password || !confirmPassword) {
+			if (!password || !passwordConfirm) {
 				alert("비밀번호를 입력하세요");
 				return false;
 			}
-			if (password != confirmPassword) {
+			if (password != passwordConfirm) {
 				alert("비밀번호가 일치하지 않습니다");
 				return false;
 			}
@@ -135,12 +138,6 @@
 			
 		});
 		
-		
-		
-		
 	});
-
-
-
 
 </script>
