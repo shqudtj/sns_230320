@@ -77,7 +77,7 @@ public class UserResetController {
 	public Map<String, Object> signIn(
 				@RequestParam("loginId") String loginId,
 				@RequestParam("password") String password,
-				HttpServletRequest request
+				HttpSession session
 			) {
 	
 		// passwordhashing
@@ -89,10 +89,9 @@ public class UserResetController {
 		Map<String, Object> result = new HashMap<>();
 		if (userEntity != null) {
 			// 로그인 처리
-			HttpSession session = request.getSession();
-			session.setAttribute("uesrId", userEntity.getId());
-			session.setAttribute("uesrLoginId", userEntity.getLoginId());
-			session.setAttribute("uesrName", userEntity.getName());
+			session.setAttribute("userId", userEntity.getId());
+			session.setAttribute("userLoginId", userEntity.getLoginId());
+			session.setAttribute("userName", userEntity.getName());
 			
 			result.put("code", 1);
 			result.put("result", "성공");

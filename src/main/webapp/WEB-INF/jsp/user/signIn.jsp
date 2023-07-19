@@ -50,14 +50,14 @@
 			
 			let url = $(this).attr("action");
 			console.log(url);
-			let params = $(this).serialize();
+			let params = $(this).serialize();	// form의 name 속성으로 data를 구성함
 			console.log(params);
 			
 			$.post(url, params)	// request
 			.done(function(data) {
 				if (data.code == 1) {
 					// 성공
-					location.href="/post/post_list_view";
+					location.href="/timeline/timeline_view";
 				} else {
 					// 로직 실패
 					alert(data.errerMessage);

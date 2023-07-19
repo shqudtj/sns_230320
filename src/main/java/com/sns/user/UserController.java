@@ -49,4 +49,5 @@ public class UserController {
 		return "redirect:/user/sign_in_view";
 		
 	}
+	
 }
