@@ -160,10 +160,10 @@
 					if (data.code == 1) {
 						// 로직 성공
 						alert("게시글이 작성 되었습니다.");
-						location.href="/timeline/timeline_view"
+						location.href="/timeline/timeline_view";
 					} else {
 						// 로직상 실패
-						alert(data.errorMessage);
+						alert("로직상 실패");
 					}
 				}
 				, error: function(request, status, error) {
