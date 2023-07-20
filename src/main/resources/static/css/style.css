@@ -2,3 +2,17 @@
 header{height:100px; background-color: rgb(216, 216, 216);}
 .contents{min-height: 500px; width:800px; justify-content: center;}
 .sigUpBox{background-color: rgb(238, 238, 238); padding:3ch;}
+
+
+a, a:hover {text-decoration:none; color:#000;}
+
+.sign-up-box {width:650px; background-color:#ebebeb; margin-top:20px; box-shadow:5px 5px 5px 5px #BDC0C0;}
+.sign-up-subject {margin:20px; font-weight:bold;}
+
+.shadow-box {width:550px; background-color:#ebebeb; margin-top:20px; box-shadow:5px 5px 5px 5px #BDC0C0;}
+.login-box {width:400px;}
+
+.contents-box {width:650px;}
+#writeTextArea {height:100px;}
+
+.comment-input {width:565px;}
