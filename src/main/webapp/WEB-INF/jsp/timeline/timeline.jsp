@@ -66,11 +66,15 @@
 	
 					<%-- 댓글 목록 --%>
 					<div class="card-comment-list m-2">
+					<c:forEach items="${commentList}" var="comment">
+					<c:if test="${comment.postId == post.id}">
 						<%-- 댓글 내용들 --%>
 						<div class="card-comment m-1">
-							<span class="font-weight-bold">댓글쓴이</span>
-							<span>댓글 내용</span>
-	
+							<span class="font-weight-bold">댓글쓴이${comment.userId}</span>
+							<span>${comment.content}</span>
+					</c:if>
+					</c:forEach>
+					
 							<%-- 댓글 삭제 버튼 --%>
 							<a href="#" class="comment-del-btn">
 								<img src="https://www.iconninja.com/files/603/22/506/x-icon.png" width="10px" height="10px">
@@ -80,7 +84,7 @@
 						<%-- 댓글 쓰기 --%>
 						<div class="comment-write d-flex border-top mt-2">
 							<input type="text" class="form-control border-0 mr-2 comment-input" placeholder="댓글 달기"/> 
-							<button type="button" class="comment-btn btn btn-light">게시</button>
+							<button type="button" class="comment-btn btn btn-light" data-post-id="${post.id}">게시</button>
 						</div>
 					</div> <%--// 댓글 목록 끝 --%>
 				</div> <%--// 카드1 끝 --%>
@@ -99,8 +103,7 @@
 		});
 		
 		// 사용자가 이미지를 선택하는 순간 유효성 확인 및 업로드 된 파일명 노출
-		$
-		('#file').on('change', function(e) {
+		$('#file').on('change', function(e) {
 			let fileName = e.target.files[0].name; // beach-1852945_1280.jpg
 			console.log(fileName);
 			
@@ -170,9 +173,61 @@
 					alert("게시글을 작성하는데 실패했습니다.");
 				}
 				
+			});
+		});
+		
+		
+		
+		
+		// 댓글 게시 버튼 클릭
+		$('.comment-btn').on('click', function() {
+			//alert("댓글 게시 클릭");
+			
+			// post의 Id data=> data-post-id 라고했음
+			let postId = $(this).data('post-id')
+			
+			
+			let comment = $('.comment-input').val();
+			//alert(comment);
+			
+			
+			// validation
+			if (!comment) {
+				alert("댓글을 입력해주세요.");
+				return;
+			}
+			
+			// form 태그가 없으니 ajax에서 만들어야함
+			let formData = new FormData();
+			formData.append("postId", postId);
+			formData.append("comment", comment);
+			
+			$.ajax({
+				// request
+				type:"get"
+				, url:"/comment/create"
+				, data:formData
+				, enctype:"multipart/form-data"
+				, processData: false
+				, contentType: false
+				
+				// response
+				, success: function(data) {
+					if (data.code == 1) {
+						// 로직 성공
+						alert("댓글이 작성 되었습니다.");
+						location.href="/timeline/timeline_view";
+					} else {
+						// 로직상 실패
+						alert("로직상 실패");
+					}
+				}
+				, error: function(request, status, error) {
+					alert("댓글을 작성하는데 실패했습니다.");
+				}
+				
 				
 			});
-			
 			
 			
 		});
