@@ -15,11 +15,11 @@
 <link rel="stylesheet" type="text/css" href="/static/css/style.css">
 </head>
 <body>
-	<div id="wrap" class="container">
-		<header class="">
+	<div id="wrap">
+		<header>
 			<jsp:include page="../include/header.jsp"></jsp:include>
 		</header>
-		<section class="contents d-flex">
+		<section class="contents">
 			<jsp:include page="../${view}.jsp"></jsp:include>
 		</section>
 	

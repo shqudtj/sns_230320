@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core" %>   
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <div class="d-flex justify-content-center">
 	<div class="contents-box">
 		<%-- 글쓰기 영역 --%>
@@ -27,7 +26,8 @@
 
 		<%-- 타임라인 영역 --%>
 		<div class="timeline-box my-5">
-			<c:forEach items="${postList}" var="post">
+		
+				<c:forEach items="${postList}" var="post">
 				<%-- 카드1 --%>
 				<div class="card border rounded mt-3">
 					<%-- 글쓴이, 더보기(삭제) --%>
@@ -67,23 +67,23 @@
 					<%-- 댓글 목록 --%>
 					<div class="card-comment-list m-2">
 					<c:forEach items="${commentList}" var="comment">
-					<c:if test="${comment.postId == post.id}">
-						<%-- 댓글 내용들 --%>
-						<div class="card-comment m-1">
-							<span class="font-weight-bold">댓글쓴이${comment.userId}</span>
-							<span>${comment.content}</span>
-					</c:if>
-					</c:forEach>
+						<c:if test="${comment.postId == post.id}">
+							<%-- 댓글 내용들 --%>
+							<div class="card-comment m-1">
+								<span class="font-weight-bold">댓글쓴이${comment.userId}</span>
+								<span>${comment.content}</span>
 					
 							<%-- 댓글 삭제 버튼 --%>
-							<a href="#" class="comment-del-btn">
-								<img src="https://www.iconninja.com/files/603/22/506/x-icon.png" width="10px" height="10px">
-							</a>
-						</div>
+								<a href="#" class="comment-del-btn">
+									<img src="https://www.iconninja.com/files/603/22/506/x-icon.png" width="10px" height="10px">
+								</a>
+							</div>
+						</c:if>
+					</c:forEach>
 	
 						<%-- 댓글 쓰기 --%>
 						<div class="comment-write d-flex border-top mt-2">
-							<input type="text" class="form-control border-0 mr-2 comment-input" placeholder="댓글 달기"/> 
+							<input type="text" name="commentInput" class="form-control border-0 mr-2 comment-input" placeholder="댓글 달기" value="" /> 
 							<button type="button" class="comment-btn btn btn-light" data-post-id="${post.id}">게시</button>
 						</div>
 					</div> <%--// 댓글 목록 끝 --%>
@@ -92,6 +92,7 @@
 		</div> <%--// 타임라인 영역 끝  --%>
 	</div> <%--// contents-box 끝  --%>
 </div>
+
 
 <script>
 	$(document).ready(function() {
@@ -184,11 +185,11 @@
 			//alert("댓글 게시 클릭");
 			
 			// post의 Id data=> data-post-id 라고했음
-			let postId = $(this).data('post-id')
+			let postId = $(this).data('post-id');
+			//alert(postId);
 			
-			
-			let comment = $('.comment-input').val();
-			//alert(comment);
+			let comment =$("input[name='commentInput']").attr("value");
+			alert(comment);
 			
 			
 			// validation
@@ -200,11 +201,11 @@
 			// form 태그가 없으니 ajax에서 만들어야함
 			let formData = new FormData();
 			formData.append("postId", postId);
-			formData.append("comment", comment);
+			formData.append("content", comment);
 			
 			$.ajax({
 				// request
-				type:"get"
+				type:"post"
 				, url:"/comment/create"
 				, data:formData
 				, enctype:"multipart/form-data"
