@@ -40,4 +40,8 @@ public class PostBO {
 		return postMapper.insertPost(userId, userLoginId, writeTextArea, imagePath);
 	}
 	
+	public List<PostEntity> getAll() {
+		return postRepository.findAll();
+	}
+	
 }

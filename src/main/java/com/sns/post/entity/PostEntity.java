@@ -33,6 +33,7 @@ public class PostEntity {
 	
 	@Column(name ="userId")
 	private int userId;
+	
 	private String content;
 	
 	@Column(name ="imagePath")

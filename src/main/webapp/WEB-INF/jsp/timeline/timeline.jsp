@@ -27,12 +27,12 @@
 		<%-- 타임라인 영역 --%>
 		<div class="timeline-box my-5">
 		
-				<c:forEach items="${postList}" var="post">
+				<c:forEach items="${cardList}" var="card">
 				<%-- 카드1 --%>
 				<div class="card border rounded mt-3">
 					<%-- 글쓴이, 더보기(삭제) --%>
 					<div class="p-2 d-flex justify-content-between">
-						<span class="font-weight-bold">글쓴이${post.userId}</span>
+						<span class="font-weight-bold">글쓴이${card.user.loginId}</span>
 	
 						<%-- 더보기 ... --%>
 						<a href="#" class="more-btn">
@@ -42,7 +42,7 @@
 	
 					<%-- 카드 이미지 --%>
 					<div class="card-img">
-						<img src="${post.imagePath}" class="w-100" alt="본문 이미지">
+						<img src="${card.post.imagePath}" class="w-100" alt="본문 이미지">
 					</div>
 	
 					<%-- 좋아요 --%>
@@ -55,8 +55,8 @@
 	
 					<%-- 글 --%>
 					<div class="card-post m-3">
-						<span class="font-weight-bold">글쓴이${post.userId}</span>
-						<span>${post.content}</span>
+						<span class="font-weight-bold">글쓴이${card.post.userId}</span>
+						<span>${card.post.content}</span>
 					</div>
 	
 					<%-- 댓글 제목 --%>
@@ -66,8 +66,8 @@
 	
 					<%-- 댓글 목록 --%>
 					<div class="card-comment-list m-2">
-					<c:forEach items="${commentList}" var="comment">
-						<c:if test="${comment.postId == post.id}">
+					<c:forEach items="${commentView}" var="comment">
+						<c:if test="${comment.postId == card.post.id}">
 							<%-- 댓글 내용들 --%>
 							<div class="card-comment m-1">
 								<span class="font-weight-bold">댓글쓴이${comment.userId}</span>
@@ -84,7 +84,7 @@
 						<%-- 댓글 쓰기 --%>
 						<div class="comment-write d-flex border-top mt-2">
 							<input type="text" name="commentInput" class="form-control border-0 mr-2 comment-input" placeholder="댓글 달기" value="" /> 
-							<button type="button" class="comment-btn btn btn-light" data-post-id="${post.id}">게시</button>
+							<button type="button" class="comment-btn btn btn-light" data-post-id="${card.post.id}">게시</button>
 						</div>
 					</div> <%--// 댓글 목록 끝 --%>
 				</div> <%--// 카드1 끝 --%>
@@ -188,7 +188,12 @@
 			let postId = $(this).data('post-id');
 			//alert(postId);
 			
-			let comment =$("input[name='commentInput']").attr("value");
+			// 1) 댓글 내용 가져오기
+			//let comment = $(this).siblings('input').val().trim();
+			
+			// 2) 댓글 내용 가져오기
+			let comment = $(this).prev().val().trim();
+			
 			alert(comment);
 			
 			
