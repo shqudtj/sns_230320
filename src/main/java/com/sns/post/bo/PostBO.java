@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sns.comon.FileManagerService;
-import com.sns.post.dao.PostMapper;
 import com.sns.post.dao.PostRepository;
 import com.sns.post.entity.PostEntity;
 
@@ -15,21 +14,18 @@ import com.sns.post.entity.PostEntity;
 public class PostBO {
 
 	@Autowired
-	private PostMapper postMapper;
-	
-	@Autowired
 	private PostRepository postRepository;
 	
 	@Autowired
 	private FileManagerService fileManagerService;
 	
-	// 로그인된 아이디의 post리스트를 가져와야함
 	
-	public List<PostEntity> getAllByOrderByIdDesc() {
+	// 로그인된 아이디의 post리스트를 가져와야함
+	public List<PostEntity> getPostList() {
 		return postRepository.findAllByOrderByIdDesc();
 	}
 	
-	public int addPost(int userId, String userLoginId, String writeTextArea, MultipartFile file) {
+	public PostEntity addPost(int userId, String userLoginId, String writeTextArea, MultipartFile file) {
 		
 		String imagePath = null;
 		
@@ -37,11 +33,12 @@ public class PostBO {
 			imagePath = fileManagerService.saverFile(userLoginId, file);
 		}
 		
-		return postMapper.insertPost(userId, userLoginId, writeTextArea, imagePath);
-	}
-	
-	public List<PostEntity> getAll() {
-		return postRepository.findAll();
+		return postRepository.save(
+				PostEntity.builder()
+				.userId(userId)
+				.content(writeTextArea)
+				.imagePath(imagePath)
+				.build());
 	}
 	
 }

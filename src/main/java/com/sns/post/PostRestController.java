@@ -29,15 +29,22 @@ public class PostRestController {
 			) {
 		
 		// 로그인 정보 받아오기
-		int userId = (int)session.getAttribute("userId");
+		Integer userId = (Integer)session.getAttribute("userId");
 		// 많은 접속자 있는 곳이면 Integer해야 오류가 안나지만 지금은 나중에 총괄체크할거기 때문에 ㄱㅊ
 		String userLoginId = (String)session.getAttribute("userLoginId"); 
+		
+		Map<String, Object> result = new HashMap<>();
+		if (userId == null) {
+			result.put("code", 500); // 비로그인 상태
+			result.put("result", "error");
+			result.put("errorMessage", "로그인을 해주세요.");
+			return result;
+		}
 		
 		
 		// db insert
 		postBO.addPost(userId, userLoginId, writeTextArea, file);
 		
-		Map<String, Object> result = new HashMap<>();
 		result.put("code", 1);
 		result.put("result", "성공");
 		

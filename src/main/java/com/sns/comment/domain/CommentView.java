@@ -1,7 +1,5 @@
 package com.sns.comment.domain;
 
-import java.util.Date;
-
 import com.sns.user.entity.UserEntity;
 
 import lombok.Data;

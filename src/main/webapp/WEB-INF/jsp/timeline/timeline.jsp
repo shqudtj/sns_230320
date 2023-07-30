@@ -27,7 +27,7 @@
 		<%-- 타임라인 영역 --%>
 		<div class="timeline-box my-5">
 		
-				<c:forEach items="${cardList}" var="card">
+				<c:forEach items="${cardList}" var="card" varStatus="stats">
 				<%-- 카드1 --%>
 				<div class="card border rounded mt-3">
 					<%-- 글쓴이, 더보기(삭제) --%>
@@ -47,15 +47,24 @@
 	
 					<%-- 좋아요 --%>
 					<div class="card-like m-3">
-						<a href="#" class="like-btn">
-							<img src="https://www.iconninja.com/files/214/518/441/heart-icon.png" width="18" height="18" alt="filled heart">
-						</a>
-						좋아요 100개
+						<%-- 좋아요가 눌려져 있지 않을 때 or 비로그인 => 빈 하트 --%>
+						<c:if test="${card.filledLike eq false}">
+							<a href="#" class="like-btn" data-post-id="${card.post.id}">
+								<img src="https://www.iconninja.com/files/214/518/441/heart-icon.png" width="18" height="18" alt="filled heart">
+							</a>
+						</c:if>
+						<%-- 좋아요가 눌려져 있지 때 => 채워진 하트 --%>
+						<c:if test="${card.filledLike}">
+							<a href="#" class="like-btn" data-post-id="${card.post.id}">
+								<img src="https://www.iconninja.com/files/527/809/128/heart-icon.png" width="18" height="18" alt="filled heart">
+							</a>
+						</c:if>
+						좋아요 ${card.likeCount}개
 					</div>
 	
 					<%-- 글 --%>
 					<div class="card-post m-3">
-						<span class="font-weight-bold">글쓴이${card.post.userId}</span>
+						<span class="font-weight-bold">글쓴이${card.user.loginId}</span>
 						<span>${card.post.content}</span>
 					</div>
 	
@@ -66,19 +75,19 @@
 	
 					<%-- 댓글 목록 --%>
 					<div class="card-comment-list m-2">
-					<c:forEach items="${commentView}" var="comment">
-						<c:if test="${comment.postId == card.post.id}">
 							<%-- 댓글 내용들 --%>
+					<c:forEach items="${card.commentList}" var="commentView">
 							<div class="card-comment m-1">
-								<span class="font-weight-bold">댓글쓴이${comment.userId}</span>
-								<span>${comment.content}</span>
+								<span class="font-weight-bold">댓글쓴이${commentView.user.loginId}</span>
+								<span>${commentView.comment.content}</span>
 					
-							<%-- 댓글 삭제 버튼 --%>
-								<a href="#" class="comment-del-btn">
+							<%-- 댓글 삭제 버튼-로그인 된 사람의 댓글일 때 삭제 버튼 노출 --%>
+							<c:if test="${userId == commentView.comment.userId}">
+								<a href="#" class="comment-del-btn" data-comment-id="${commentView.comment.id}">
 									<img src="https://www.iconninja.com/files/603/22/506/x-icon.png" width="10px" height="10px">
 								</a>
+							</c:if>
 							</div>
-						</c:if>
 					</c:forEach>
 	
 						<%-- 댓글 쓰기 --%>
@@ -193,8 +202,7 @@
 			
 			// 2) 댓글 내용 가져오기
 			let comment = $(this).prev().val().trim();
-			
-			alert(comment);
+			//alert(comment);
 			
 			
 			// validation
@@ -222,7 +230,7 @@
 					if (data.code == 1) {
 						// 로직 성공
 						alert("댓글이 작성 되었습니다.");
-						location.href="/timeline/timeline_view";
+						location.reload(true);
 					} else {
 						// 로직상 실패
 						alert("로직상 실패");
@@ -232,10 +240,72 @@
 					alert("댓글을 작성하는데 실패했습니다.");
 				}
 				
+			});
+		});
+		
+		// 댓글 삭제
+		$('.comment-del-btn').on('click', function(e) {
+			e.preventDefault();
+			
+			//alert("댓글삭제");
+			let commentId = $(this).data('comment-id');
+			//alert(commentId);
+			
+			$.ajax({
+				// request
+				type:"delete"
+				, url:"/comment/delete"
+				, data:{"commentId":commentId}
+			
+				// response
+				, success:function(data) {
+					if (data.code == 1) {
+						location.reload(true);
+					} else {
+						alert(data.errorMessage);
+					}
+				}
+				, error:function(request, status, error) {
+					alert("댓글 삭제 실패했습니다.");
+				}
 				
 			});
 			
+		});
+		
+		
+		// 좋아요 / 해제 토글
+		$(".like-btn").on('click', function(e) {
+			e.preventDefault();
+			//alert("좋아요클릭");
 			
+			/*let userId = ${userId};
+			alert(userId) */
+			
+			let postId = $(this).data('post-id');
+			//alert(postId);
+			
+			$.ajax({
+				// request
+				// 타입은 생략해도됨 get post 둘다 되어서
+				url:"/like/" + postId		// 	/like/3
+				// data 도 안 넘겨도 됨 하나뿐이라서
+				
+				
+				// response
+				, success:function(data) {
+					if (data.code == 1) {
+						location.reload();
+					} else if (data.code == 300) {
+						alert(data.errorMessage);
+						location.href = "/user/sign_in_view";
+					}
+					
+				}
+				, error:function(request, status, error) {
+					alert("좋아요를 하는데 실패했습니다.");
+				}
+			});
 		});
 		
 		

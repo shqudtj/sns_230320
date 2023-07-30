@@ -19,4 +19,6 @@ public interface CommentMapper {
 	public List<CommentEntity> selectAllByOrderByIdDesc();
 	
 	public List<Comment> selectCommentListByPostId(int postId);
+	
+	public void deleteCommentById(int commentId);
 }

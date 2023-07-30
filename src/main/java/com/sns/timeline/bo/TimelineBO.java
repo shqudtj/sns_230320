@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.sns.comment.bo.CommentBO;
 import com.sns.comment.domain.CommentView;
+import com.sns.like.bo.LikeBO;
 import com.sns.post.bo.PostBO;
 import com.sns.post.entity.PostEntity;
 import com.sns.timeline.domain.CardView;
@@ -27,19 +29,21 @@ public class TimelineBO {
 	@Autowired
 	private CommentBO commentBO;
 	
+	@Autowired
+	private LikeBO likeBO;
+	
 	// input: X
 	// output: List<CardView> => CardView는 카드를 나타내기 위한 view를 만들었다고 해줘야 남들도 알 수 있음
-	public List<CardView> generateCardViewList() {
+	// 비로그인시에도 카드리스트는 뿌려져야 하므로 Integer userId - null 허용
+	public List<CardView> generateCardViewList(Integer userId) {
 		List<CardView> cardViewList = new ArrayList<>(); // []
 
 		// 글 목록 가져온다.
-		List<PostEntity> postList = postBO.getAll(); // => postEntity의 리스트
+		List<PostEntity> postList = postBO.getPostList(); // => postEntity의 리스트
 		
 		
 		// 글 목록 반복문 순회
 		// postEntity => cardView => cardViewList에 담는다.
-		
-		
 		for (PostEntity post : postList) {
 			// post에 대응되는 하나의 카드를 만든다.
 			CardView card = new CardView();
@@ -55,12 +59,19 @@ public class TimelineBO {
 			List<CommentView> commentViewList = commentBO.generateCommentViewList(post.getId());
 			card.setCommentList(commentViewList);
 			
+			// 좋아요 개수
+			int likeCount = likeBO.getLikeCountByPostId(post.getId());
+			card.setLikeCount(likeCount);
+			
+			// 좋아요 여부
+			boolean filledLike = likeBO.filledLike(post.getId(), userId);	// 맥락을 읽을 수 있도록 likeBO에서 처리하도록 함
+			card.setFilledLike(filledLike);
+			
+			
+			
 			// ★★★★★★★★ cardViewList에 담는다.
 			cardViewList.add(card);
 		}
-		
-		
-		
 		
 		return cardViewList;
 	}
