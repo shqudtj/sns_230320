@@ -6,12 +6,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class FileManagerService {
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	// 실제 업로드가 된 이미지가 저장될 경로(서버의 주소)
 	// 학원용
 	public static final String FILE_UPLOAD_PATH = "D:\\NBS\\6_spring_project\\sns\\workspace\\images/";
@@ -50,6 +54,36 @@ public class FileManagerService {
 		// 예) /images/aaaa_1689861196123/tavern-7411977_1280.jpg
 		return "/images/" + directoryName + file.getOriginalFilename();
 	}
+	
+	// 파일 삭제 메소드
+		// input: imagePath
+		// output: void
+		public void deleteFile(String imagePath) { // imagePath: /images/aaaa_1689861196123/tavern-7411977_1280.jpg
+			// E:\\개발\\6_memeoo\\workspace\\images//images/aaaa_1689861196123/tavern-7411977_1280.jpg
+			// 주소에 겹치는 /images/를 제거한다.
+					
+			Path path = Paths.get(FILE_UPLOAD_PATH + imagePath.replace("/images/", ""));  
+			if (Files.exists(path)) { // 이미지가 존재하는가?
+				// 이미지 삭제
+				try {
+					Files.delete(path);  // try/catch
+				} catch (IOException e) {
+					//e.printStackTrace(); // log찍는거임
+					logger.info("###[FileManagerService 이미지 삭제 실패] imagePath:{}", imagePath);
+				}
+				
+				// 디렉토리 삭제 (이미지가 들어있떤 폴더 삭제)
+				path = path.getParent();
+				if (Files.exists(path)) {
+					try {
+						Files.delete(path); // try/catch
+					} catch (IOException e) {
+						logger.info("###[FileManagerService 이미지 폴더 삭제 실패] imagePath:{}", imagePath);
+					}
+				}
+				
+			}
+		}
 	
 }
 

@@ -45,6 +45,10 @@ public class LikeBO {
 		
 	}
 	
+	public void deleteLikeByPostId(int postId) {
+		likeMapper.deleteLikeByPostId(postId);
+	}
+	
 }
 
 
